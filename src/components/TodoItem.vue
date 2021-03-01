@@ -1,31 +1,43 @@
 <template>
   <div>
-    <Navbar></Navbar>
-    <main role="main">
-      <Banner></Banner>
-      <Todo></Todo>
-    </main>
+    <li :class="['todo-item', todoProps.completed ? 'is-completed' : '']">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input class="checkbox" type="checkbox"
+                 :checked="todoProps.completed"
+                 @change="markItemCompleted"
+          />
+          {{todoProps.title}}
+          <i class="input-helper" @click="deleteItem"></i>
+        </label>
+      </div>
+      <i class="remove mdi mdi-close-circle-outline"></i>
+    </li>
   </div>
 </template>
 
 <script>
-/*import HelloWorld from './components/HelloWorld.vue'*/
-import Navbar from "@/components/Navbar";
-import Banner from "@/components/Banner";
-import Todo from "@/components/Todo";
 export default {
-  name: 'App',
-  components: {
-    Todo,
-    Banner,
-    Navbar
+  name: "TodoItem",
+  props: ['todoProps'],
+  setup(props, context) {
+    const markItemCompleted = () => {
+      context.emit('item-completed', props.todoProps.id)
+    }
+
+    const deleteItem = () => {
+      context.emit('delete-item', props.todoProps.id)
+    }
+
+    return {
+      markItemCompleted,
+      deleteItem
+    }
   }
 }
 </script>
 
-<style>
-/* Make the image fully responsive */
-/* Make the image fully responsive */
+<style scoped>
 .carousel-inner img {
   width: 100%;
   height: 100%;
